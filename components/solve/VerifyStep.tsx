@@ -13,12 +13,12 @@ export function VerifyStep() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h2 className="text-lg font-semibold">Does this match your cube?</h2>
-        <p className="text-sm text-muted">
+        <h2 className="pop-heading mb-3">Does this match your cube?</h2>
+        <p className="bubble text-sm">
           Drag to turn the 3D cube around and compare it with your real cube. Hold yours with white on top and green facing you.
         </p>
       </div>
-      <div className="rounded-xl bg-[var(--chip)]">
+      <div className="panel-dots">
         <Cube3D facelets={facelets} />
       </div>
       <div className="flex gap-2">

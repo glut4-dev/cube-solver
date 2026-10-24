@@ -77,7 +77,7 @@ export function PhotoAligner({ source, face, up, onConfirm, onCancel }: Props) {
     <div className="flex flex-col gap-3">
       <div
         ref={boxRef}
-        className="relative w-full aspect-square overflow-hidden rounded-xl bg-black touch-none select-none cursor-grab active:cursor-grabbing"
+        className="relative w-full aspect-square overflow-hidden rounded-xl border-[3px] border-black bg-black shadow-[6px_6px_0_var(--shadow)] touch-none select-none cursor-grab active:cursor-grabbing"
         onPointerDown={(e) => {
           (e.target as Element).setPointerCapture(e.pointerId);
           drag.current = { x: e.clientX, y: e.clientY, ox: offset.x, oy: offset.y };
@@ -92,7 +92,7 @@ export function PhotoAligner({ source, face, up, onConfirm, onCancel }: Props) {
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
         <GridOverlay face={face} up={up} />
       </div>
-      <label className="flex items-center gap-3 text-sm text-muted">
+      <label className="flex items-center gap-3 text-sm font-bold">
         Zoom
         <input
           type="range"
@@ -101,10 +101,10 @@ export function PhotoAligner({ source, face, up, onConfirm, onCancel }: Props) {
           step={0.01}
           value={zoom}
           onChange={(e) => setZoom(parseFloat(e.target.value))}
-          className="flex-1 accent-[var(--accent)]"
+          className="flex-1"
         />
       </label>
-      <p className="text-sm text-muted">Drag and zoom so each sticker sits inside one square of the grid.</p>
+      <p className="text-sm font-medium">Drag and zoom so each sticker sits inside one square of the grid.</p>
       <div className="flex gap-2">
         <button className="btn-secondary flex-1" onClick={onCancel}>
           Back

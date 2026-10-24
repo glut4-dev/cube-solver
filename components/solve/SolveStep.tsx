@@ -46,16 +46,16 @@ export function SolveStep() {
             role="radio"
             aria-checked={method === m.id}
             onClick={() => setMethod(m.id)}
-            className={`rounded-xl border-2 p-3 text-left ${method === m.id ? "border-[var(--accent)] bg-[var(--chip)]" : "border-[var(--border)]"}`}
+            className={`rounded-xl border-[3px] border-black p-3 text-left transition-transform ${method === m.id ? "-rotate-1 bg-[var(--pink)] text-white shadow-[5px_5px_0_#111]" : "bg-white text-black shadow-[3px_3px_0_#111] hover:-translate-y-0.5"}`}
           >
-            <p className="font-semibold">{m.title}</p>
-            <p className="text-xs text-muted">{m.text}</p>
+            <p className="font-pop text-xl leading-tight" style={method === m.id ? { textShadow: "2px 2px 0 #111" } : undefined}>{m.title}</p>
+            <p className="text-xs font-medium">{m.text}</p>
           </button>
         ))}
       </div>
 
       {busy && (
-        <div className="rounded-lg bg-[var(--chip)] p-6 text-center text-sm">
+        <div className="panel font-pop p-6 text-center text-xl">
           {method === "shortest" ? "Computing the shortest solution… (the first time takes a few seconds)" : "Working out the steps…"}
         </div>
       )}

@@ -50,7 +50,7 @@ export function ScanStep() {
                   setPhase({ kind: "camera" });
                 }
               }}
-              className={`relative aspect-square overflow-hidden rounded-lg border-2 ${active ? "border-[var(--accent)]" : "border-[var(--border)]"}`}
+              className={`relative aspect-square overflow-hidden rounded-lg border-[3px] border-black bg-white transition-transform ${active ? "-translate-y-1 shadow-[3px_3px_0_var(--pink)] ring-2 ring-[var(--pink)]" : "shadow-[2px_2px_0_#111]"}`}
               aria-label={`${FACE_INFO[s.face].color} side`}
             >
               {p ? (
@@ -65,10 +65,10 @@ export function ScanStep() {
       </div>
 
       <div>
-        <h2 className="text-lg font-semibold">
-          Photo {scanIndex + 1} of 6: the {info.color} side
+        <h2 className="pop-heading mb-3">
+          Photo {scanIndex + 1} of 6: the {info.color} side!
         </h2>
-        <p className="text-sm text-muted">{step.tip}</p>
+        <p className="bubble text-sm">{step.tip}</p>
       </div>
 
       <div className={phase.kind === "camera" ? "" : "hidden"}>
@@ -99,8 +99,8 @@ function QualityReport({ image, analysis, onRetake, onAccept }: { image: string;
     <div className="flex flex-col gap-3">
       <div className="flex gap-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image} alt="Cropped photo" className="w-1/2 rounded-lg" />
-        <div className="grid w-1/2 grid-cols-3 gap-1 rounded-lg bg-neutral-900 p-1.5">
+        <img src={image} alt="Cropped photo" className="w-1/2 rounded-xl border-[3px] border-black shadow-[4px_4px_0_var(--shadow)]" />
+        <div className="grid w-1/2 grid-cols-3 gap-1 rounded-xl border-[3px] border-black bg-neutral-900 p-1.5 shadow-[4px_4px_0_var(--shadow)]">
           {analysis.samples.map((c, i) => (
             <div
               key={i}
@@ -112,7 +112,9 @@ function QualityReport({ image, analysis, onRetake, onAccept }: { image: string;
       </div>
       <div className={`rounded-lg p-3 text-sm ${ok ? "bg-ok" : errors.length ? "bg-err" : "bg-warn"}`}>
         {ok ? (
-          <p>Looks good: sharp, well lit and lined up with the grid.</p>
+          <p>
+            <span className="font-pop mr-1 text-lg">Nice!</span> Sharp, well lit and lined up with the grid.
+          </p>
         ) : (
           <ul className="flex flex-col gap-1">
             {analysis.issues.map((i: QualityIssue, k) => (
@@ -123,7 +125,7 @@ function QualityReport({ image, analysis, onRetake, onAccept }: { image: string;
           </ul>
         )}
       </div>
-      {errors.length > 0 && <p className="text-sm font-medium">Please take this photo again for a reliable result.</p>}
+      {errors.length > 0 && <p className="text-sm font-bold">Please take this photo again for a reliable result.</p>}
       <div className="flex gap-2">
         <button className={errors.length ? "btn-primary flex-1" : "btn-secondary flex-1"} onClick={onRetake}>
           Retake

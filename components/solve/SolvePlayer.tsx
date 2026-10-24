@@ -5,6 +5,7 @@ import { CENTER, Face, Facelets, applyMove, invertMove, parseMove } from "@/lib/
 import { FACE_INFO } from "@/lib/cube/faces";
 import type { SolveStage } from "@/lib/solver";
 import type { CubeAnimation } from "@/components/cube3d/Cube3D";
+import { Burst } from "@/components/pop/Burst";
 
 const Cube3D = dynamic(() => import("@/components/cube3d/Cube3D"), {
   ssr: false,
@@ -113,30 +114,34 @@ export function SolvePlayer({ start, stages }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="relative">
+      <div className="panel-dots relative">
         <Cube3D facelets={states[index]} animation={anim} onAnimationEnd={onAnimationEnd} speed={speed} />
-        <div className="pointer-events-none absolute left-2 top-2 rounded-md bg-black/55 px-2 py-1 text-xs text-white">
+        <div className="chip font-pop pointer-events-none absolute left-2 top-2 px-2.5 py-0.5 text-base">
           Move {Math.min(index + (anim?.dir === 1 ? 1 : 0), total)} / {total}
         </div>
       </div>
 
       {/* current move */}
-      <div className="rounded-xl border border-[var(--border)] p-4">
+      <div className="panel p-4">
         {done ? (
-          <div className="text-center">
-            <p className="text-2xl font-bold">Solved! 🎉</p>
-            <p className="text-sm text-muted">Your cube should now be solved too.</p>
+          <div className="flex items-center justify-center gap-4">
+            <Burst size={120} fill="#ff2e88" rotate={-10}>
+              Solved!
+            </Burst>
+            <p className="font-medium">Your real cube should be solved too. Well done!</p>
           </div>
         ) : (
           <div className="flex items-center gap-4">
-            <div className="min-w-16 rounded-lg bg-[var(--accent)] px-3 py-2 text-center font-mono text-3xl font-bold text-white">{nextMove}</div>
-            <p className="text-sm">{describeMove(nextMove!, states[index])}</p>
+            <div className="font-pop min-w-20 -rotate-3 rounded-xl border-[3px] border-black bg-[var(--pink)] px-3 py-1.5 text-center text-5xl text-white shadow-[4px_4px_0_#111]" style={{ textShadow: "3px 3px 0 #111" }}>
+              {nextMove}
+            </div>
+            <p className="font-medium">{describeMove(nextMove!, states[index])}</p>
           </div>
         )}
       </div>
 
       {/* controls */}
-      <div className="grid grid-cols-4 gap-2">
+      <div className="player-controls grid grid-cols-4 gap-2">
         <button className="btn-secondary" onClick={() => jumpTo(0)} disabled={index === 0 || !!anim} aria-label="Restart">
           ⏮
         </button>
@@ -150,7 +155,7 @@ export function SolvePlayer({ start, stages }: Props) {
           {playing ? "⏸" : "▶▶"}
         </button>
       </div>
-      <label className="flex items-center gap-3 text-sm text-muted">
+      <label className="flex items-center gap-3 text-sm font-bold">
         Speed
         <input
           type="range"
@@ -159,16 +164,16 @@ export function SolvePlayer({ start, stages }: Props) {
           step={0.05}
           value={1.35 - speed}
           onChange={(e) => setSpeed(1.35 - parseFloat(e.target.value))}
-          className="flex-1 accent-[var(--accent)]"
+          className="flex-1"
         />
       </label>
 
       {/* stage */}
-      <div className="rounded-xl border border-[var(--border)] p-4">
-        <p className="text-xs uppercase tracking-wide text-muted">
+      <div className="panel p-4">
+        <p className="text-xs font-bold uppercase tracking-wide text-muted">
           Stage {currentStage + 1} of {stages.length}
         </p>
-        <h3 className="text-lg font-semibold">{stage.title}</h3>
+        <h3 className="pop-heading !text-2xl">{stage.title}</h3>
         <p className="mb-3 text-sm text-muted">{stage.description}</p>
         {stage.moves.length === 0 ? (
           <p className="text-sm">Already done — nothing to do here.</p>
@@ -180,7 +185,7 @@ export function SolvePlayer({ start, stages }: Props) {
                 <button
                   key={i}
                   onClick={() => jumpTo(i)}
-                  className={`rounded px-1.5 py-0.5 ${i === index ? "bg-[var(--accent)] text-white" : i < index ? "text-muted line-through" : "bg-[var(--chip)]"}`}
+                  className={`rounded-md border-2 px-1.5 py-0.5 font-bold ${i === index ? "border-black bg-[var(--pink)] text-white" : i < index ? "border-transparent text-muted line-through" : "border-black bg-white text-black"}`}
                 >
                   {s.move}
                 </button>
@@ -191,15 +196,15 @@ export function SolvePlayer({ start, stages }: Props) {
       </div>
 
       {stages.length > 1 && (
-        <ol className="flex flex-col gap-1 text-sm">
+        <ol className="panel flex flex-col gap-1 p-2 text-sm">
           {stages.map((s, si) => {
             const from = stageStart[si];
             const to = from + s.moves.length;
             const status = index >= to ? "done" : si === currentStage ? "now" : "todo";
             return (
               <li key={s.id}>
-                <button onClick={() => jumpTo(from)} className="flex w-full items-center gap-2 rounded-md px-2 py-1 text-left hover:bg-[var(--chip)]">
-                  <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-xs ${status === "done" ? "bg-green-600 text-white" : status === "now" ? "bg-[var(--accent)] text-white" : "bg-[var(--chip)]"}`}>
+                <button onClick={() => jumpTo(from)} className="flex w-full items-center gap-2 rounded-md px-2 py-1 text-left hover:bg-[var(--sun)] hover:text-black">
+                  <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-xs border-2 border-black font-bold ${status === "done" ? "bg-[var(--lime)] text-black" : status === "now" ? "bg-[var(--pink)] text-white" : "bg-white text-black"}`}>
                     {status === "done" ? "✓" : si + 1}
                   </span>
                   <span className={status === "now" ? "font-semibold" : ""}>{s.title}</span>

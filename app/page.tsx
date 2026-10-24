@@ -8,6 +8,7 @@ import { SolveStep } from "@/components/solve/SolveStep";
 import { warmupSolver } from "@/lib/solver";
 import { FACE_INFO } from "@/lib/cube/faces";
 import { FACES } from "@/lib/cube/model";
+import { Burst } from "@/components/pop/Burst";
 
 const STEPS: { id: Step; label: string }[] = [
   { id: "scan", label: "Scan" },
@@ -29,21 +30,22 @@ export default function Home() {
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-5 px-4 py-5">
-      <header className="flex items-center justify-between">
-        <button onClick={reset} className="flex items-center gap-2 text-lg font-bold">
-          <span className="grid grid-cols-3 gap-[2px] rounded-[4px] bg-neutral-900 p-[2px]" aria-hidden>
+      <header className="flex flex-wrap items-center justify-between gap-2">
+        <button onClick={reset} className="flex items-center gap-2" aria-label="Cube Solver, back to start">
+          <span className="grid -rotate-6 grid-cols-3 gap-[2px] rounded-[5px] border-2 border-black bg-black p-[2px] shadow-[3px_3px_0_var(--pink)]" aria-hidden>
             {FACES.concat(["F", "U", "R"]).map((f, i) => (
-              <span key={i} className="h-[6px] w-[6px] rounded-[1px]" style={{ background: FACE_INFO[f].hex }} />
+              <span key={i} className="h-[8px] w-[8px] rounded-[1px]" style={{ background: FACE_INFO[f].hex }} />
             ))}
           </span>
-          Cube Solver
+          <span className="pop-heading !text-[2rem]">Cube Solver</span>
         </button>
         {step !== "start" && (
-          <ol className="flex gap-1 text-xs">
+          <ol className="flex gap-1.5 text-xs font-bold">
             {STEPS.map((s, i) => (
               <li
                 key={s.id}
-                className={`rounded-full px-2 py-0.5 ${i === current ? "bg-[var(--accent)] text-white" : i < current ? "bg-[var(--chip)]" : "text-muted"}`}
+                aria-current={i === current ? "step" : undefined}
+                className={`chip px-2 py-0.5 ${i === current ? "!bg-[var(--pink)] !text-white" : i < current ? "!bg-[var(--lime)]" : "opacity-60"}`}
               >
                 {s.label}
               </li>
@@ -63,24 +65,37 @@ export default function Home() {
 
 function StartScreen() {
   const { startScan, loadDemo } = useCubeStore();
+  const tips = [
+    { icon: "📷", text: "Good, even light. Daylight is best — no glare!", bg: "var(--cyan)", rot: "-rotate-1" },
+    { icon: "🎯", text: "Fit the cube exactly inside the grid on screen.", bg: "var(--lime)", rot: "rotate-1" },
+    { icon: "🧭", text: "Follow the hints for which colour goes on top.", bg: "var(--orange)", rot: "-rotate-1" },
+  ];
   return (
-    <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="mb-2 text-2xl font-bold">Solve your Rubik&apos;s cube</h1>
-        <p className="text-muted">Take a photo of each of the 6 sides. The app reads the colours, shows your cube in 3D, and then guides you move by move.</p>
+    <div className="flex flex-col gap-6">
+      <div className="panel relative overflow-visible p-5 pr-28">
+        <h1 className="pop-heading mb-2 !text-[2.6rem]">Solve your Rubik&apos;s cube!</h1>
+        <p className="font-medium">Snap the 6 sides. The app reads the colours, shows your cube in 3D, then guides you move by move.</p>
+        <Burst size={124} className="!absolute -right-4 -top-8" rotate={12}>
+          Solve
+          <br />
+          it!
+        </Burst>
       </div>
-      <ul className="flex flex-col gap-2 text-sm">
-        <li>📷 Use good, even light — daylight is best, avoid glare.</li>
-        <li>🎯 Fit the cube exactly inside the grid on screen.</li>
-        <li>🧭 Follow the hints on which colour goes on top; the app checks every photo.</li>
+      <ul className="grid gap-3">
+        {tips.map((t) => (
+          <li key={t.icon} className={`flex items-center gap-3 rounded-xl border-[3px] border-black p-3 font-semibold text-black shadow-[4px_4px_0_#111] ${t.rot}`} style={{ background: t.bg }}>
+            <span className="text-2xl" aria-hidden>{t.icon}</span>
+            {t.text}
+          </li>
+        ))}
       </ul>
-      <button className="btn-primary py-3 text-base" onClick={startScan}>
-        Start scanning
+      <button className="btn-primary py-4 !text-2xl" onClick={startScan}>
+        Start scanning!
       </button>
       <button className="btn-ghost" onClick={loadDemo}>
         Or try it with a random cube
       </button>
-      <p className="text-xs text-muted">Everything runs in your browser; photos are never uploaded.</p>
+      <p className="text-center text-xs text-muted">Everything runs in your browser; photos are never uploaded.</p>
     </div>
   );
 }

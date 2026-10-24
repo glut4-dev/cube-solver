@@ -64,10 +64,10 @@ export function CameraView({ face, up, onCapture }: Props) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="relative w-full aspect-square overflow-hidden rounded-xl bg-black">
+      <div className="relative w-full aspect-square overflow-hidden rounded-xl border-[3px] border-black bg-black shadow-[6px_6px_0_var(--shadow)]">
         <video ref={videoRef} playsInline muted className="absolute inset-0 h-full w-full object-cover" />
         {!ready && (
-          <div className="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-white/80">
+          <div className="absolute inset-0 flex items-center justify-center p-6 text-center text-sm font-semibold text-white">
             {error ?? "Starting camera…"}
           </div>
         )}

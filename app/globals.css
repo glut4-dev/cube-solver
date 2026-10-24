@@ -1,65 +1,195 @@
 @import "tailwindcss";
 
+/* ---------- Pop-art palette ---------- */
 :root {
-  --background: #fafaf9;
-  --foreground: #1c1917;
-  --muted: #57534e;
-  --border: #d6d3d1;
-  --chip: #f0efed;
-  --accent: #4f46e5;
-  --ok-bg: #dcfce7;
-  --warn-bg: #fef3c7;
-  --err-bg: #fee2e2;
+  --pink: #ff2e88;
+  --cyan: #22d3ee;
+  --lime: #a3ff4f;
+  --orange: #ffb01f;
+  --red: #ff5a5a;
+  --sun: #ffe14d;
+
+  --background: var(--sun);
+  --foreground: #111;
+  --muted: #3a3a3a;
+  --panel: #fff;
+  --line: #111; /* outlines */
+  --shadow: #111; /* hard offset shadows */
+  --dot: rgba(255, 46, 136, 0.28); /* halftone dots */
+  --border: var(--line);
+  --chip: #fff;
+  --accent: var(--pink);
+  --ok-bg: var(--lime);
+  --warn-bg: var(--orange);
+  --err-bg: var(--red);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0c0a09;
-    --foreground: #f5f5f4;
-    --muted: #a8a29e;
-    --border: #3a3633;
-    --chip: #1f1c1a;
-    --accent: #6366f1;
-    --ok-bg: #14532d;
-    --warn-bg: #713f12;
-    --err-bg: #7f1d1d;
+    --background: #24104f;
+    --foreground: #fff;
+    --muted: #d6ccf5;
+    --panel: #34206e;
+    --line: #000;
+    --shadow: var(--pink);
+    --dot: rgba(34, 211, 238, 0.22);
+    --chip: #45308a;
+    --ok-bg: #2f7a12;
+    --warn-bg: #a1580a;
+    --err-bg: #a3192b;
   }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-body);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
+  background-color: var(--background);
+  background-image: radial-gradient(var(--dot) 1.3px, transparent 1.8px);
+  background-size: 14px 14px;
+  min-height: 100dvh;
 }
 
 @layer components {
   .text-muted { color: var(--muted); }
+  .bg-ok, .bg-warn, .bg-err {
+    border: 3px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 4px 4px 0 var(--shadow);
+    font-weight: 500;
+  }
   .bg-ok { background: var(--ok-bg); }
   .bg-warn { background: var(--warn-bg); }
   .bg-err { background: var(--err-bg); }
 
-  .btn-primary,
-  .btn-secondary,
-  .btn-ghost {
-    border-radius: 0.6rem;
-    padding: 0.65rem 1rem;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: filter 0.15s, background 0.15s, opacity 0.15s;
+  /* comic-book lettering */
+  .font-pop {
+    font-family: var(--font-pop), "Impact", sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.04em;
   }
-  .btn-primary { background: var(--accent); color: white; }
-  .btn-primary:hover:not(:disabled) { filter: brightness(1.1); }
-  .btn-secondary { background: var(--chip); border: 1px solid var(--border); }
-  .btn-secondary:hover:not(:disabled) { filter: brightness(0.96); }
-  .btn-ghost { color: var(--muted); font-weight: 500; }
-  .btn-ghost:hover { color: var(--foreground); }
+  .pop-heading {
+    font-family: var(--font-pop), "Impact", sans-serif;
+    font-weight: 400;
+    font-size: 1.9rem;
+    line-height: 1.05;
+    letter-spacing: 0.04em;
+    text-shadow: 3px 3px 0 var(--pink);
+  }
+
+  /* comic panel */
+  .panel {
+    background: var(--panel);
+    border: 3px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 6px 6px 0 var(--shadow);
+  }
+  /* panel with a cyan halftone, used behind the 3D cube */
+  .panel-dots {
+    background-color: var(--cyan);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.55) 1.6px, transparent 2px);
+    background-size: 12px 12px;
+    border: 3px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 6px 6px 0 var(--shadow);
+    overflow: hidden;
+  }
+
+  /* speech bubble for tips */
+  .bubble {
+    position: relative;
+    background: #fff;
+    color: #111;
+    border: 3px solid var(--line);
+    border-radius: 18px;
+    padding: 0.6rem 0.9rem;
+    font-weight: 500;
+    box-shadow: 4px 4px 0 var(--shadow);
+  }
+  .bubble::after {
+    /* tail: a rotated square showing only its two outer edges */
+    content: "";
+    position: absolute;
+    left: 26px;
+    bottom: -10px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-right: 3px solid var(--line);
+    border-bottom: 3px solid var(--line);
+    transform: rotate(45deg);
+  }
+
+  /* buttons */
+  .btn-primary,
+  .btn-secondary {
+    font-family: var(--font-pop), "Impact", sans-serif;
+    font-weight: 400;
+    font-size: 1.3rem;
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    border: 3px solid var(--line);
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    box-shadow: 4px 4px 0 var(--shadow);
+    transition: transform 0.08s, box-shadow 0.08s, filter 0.15s;
+  }
+  .btn-primary {
+    background: var(--pink);
+    color: #fff;
+    text-shadow: 2px 2px 0 #111;
+  }
+  .btn-secondary { background: #fff; color: #111; }
+  .btn-primary:hover:not(:disabled),
+  .btn-secondary:hover:not(:disabled) {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--shadow);
+  }
+  .btn-primary:active:not(:disabled),
+  .btn-secondary:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0 var(--shadow);
+  }
   .btn-primary:disabled,
-  .btn-secondary:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-secondary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: 2px 2px 0 var(--shadow);
+  }
+  .btn-ghost {
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--pink);
+    padding: 0.4rem;
+  }
+  .btn-ghost:hover { color: var(--pink); }
+
+  /* small outlined chip */
+  .chip {
+    border: 2px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: #111;
+  }
+
+  input[type="range"] { accent-color: var(--pink); }
+
+  /* the 4 player buttons share one row on phones */
+  .player-controls > button {
+    font-size: 1.1rem;
+    padding: 0.55rem 0.25rem;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary, .btn-secondary { transition: none; }
 }

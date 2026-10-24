@@ -29,8 +29,8 @@ export function ReviewStep() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h2 className="text-lg font-semibold">Check the colours</h2>
-        <p className="text-sm text-muted">
+        <h2 className="pop-heading mb-3">Check the colours!</h2>
+        <p className="bubble text-sm">
           This is your cube unfolded. Tap a sticker to change its colour. Stickers with a dashed outline were hard to read.
         </p>
       </div>
@@ -54,7 +54,7 @@ export function ReviewStep() {
         </div>
       )}
 
-      <div className="mx-auto grid w-full max-w-md grid-cols-4 gap-1.5">
+      <div className="panel mx-auto grid w-full max-w-md grid-cols-4 gap-1.5 p-2.5">
         {FACES.map((f, fi) => {
           const [col, row] = NET[f];
           return (
@@ -81,10 +81,10 @@ export function ReviewStep() {
           );
         })}
         {hasPhotos && (
-          <div className="col-span-2 col-start-3 row-start-3 flex flex-wrap content-start gap-1 p-1 text-xs text-muted">
+          <div className="col-span-2 col-start-3 row-start-3 flex flex-wrap content-start gap-x-1.5 gap-y-0.5 p-1 text-xs font-semibold">
             Retake:
             {FACES.map((f) => (
-              <button key={f} onClick={() => retake(f)} className="underline underline-offset-2">
+              <button key={f} onClick={() => retake(f)} className="underline decoration-[var(--pink)] decoration-2 underline-offset-2">
                 {FACE_INFO[f].color}
               </button>
             ))}
@@ -93,14 +93,14 @@ export function ReviewStep() {
       </div>
 
       {picking !== null && (
-        <div className="flex flex-col gap-2 rounded-lg border border-[var(--border)] p-3">
-          <p className="text-sm">Choose the colour of this sticker:</p>
+        <div className="panel flex flex-col gap-2 p-3">
+          <p className="font-pop text-lg">Pick the colour of this sticker:</p>
           <div className="flex justify-between gap-2">
             {FACES.map((f) => (
               <button
                 key={f}
                 aria-label={FACE_INFO[f].color}
-                className="h-10 flex-1 rounded-md border border-black/20"
+                className="h-11 flex-1 rounded-lg border-[3px] border-black shadow-[2px_2px_0_#111] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
                 style={{ background: FACE_INFO[f].hex }}
                 onClick={() => {
                   setSticker(picking, f);
@@ -113,10 +113,12 @@ export function ReviewStep() {
       )}
 
       {result.valid ? (
-        <div className="rounded-lg bg-ok p-3 text-sm">This is a valid cube.</div>
+        <div className="bg-ok p-3 text-sm text-black">
+          <span className="font-pop mr-1 text-lg">Boom!</span> This is a valid cube.
+        </div>
       ) : (
         <div className="rounded-lg bg-err p-3 text-sm">
-          <p className="mb-1 font-medium">This cube can&apos;t be solved yet:</p>
+          <p className="font-pop mb-1 text-lg">Whoops! This cube can&apos;t be solved yet:</p>
           <ul className="list-inside list-disc">
             {result.errors.map((e, k) => (
               <li key={k}>{e}</li>
